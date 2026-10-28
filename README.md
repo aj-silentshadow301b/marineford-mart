@@ -1,8 +1,8 @@
 # Marineford Mart
 
-A small, intentionally vulnerable Flask CTF storefront for an isolated practice lab. The exercise combines server-side template injection (SSTI), a removal-based input filter, client-controlled order pricing, a hidden purchase gate, and a multi-part flag exposed through a receipt flow.
+A deliberately vulnerable Flask CTF storefront for an isolated practice lab. The exercise demonstrates server-side template injection (SSTI), a removal-based filter bypass, client-controlled pricing, a hidden purchase gate, and a multi-part flag receipt.
 
-> **Warning:** This application is deliberately vulnerable. Run it only on your own machine or an isolated lab you control. Do not expose it to the public internet or use real credentials or user data.
+> **Warning:** This app is intentionally vulnerable. Run it only on your own computer or an isolated lab you control. Never expose it to the public internet or use real credentials or user data.
 
 ## Requirements
 
@@ -11,51 +11,51 @@ A small, intentionally vulnerable Flask CTF storefront for an isolated practice 
 
 ## Run locally
 
-```sh
+\`\`\`sh
 python -m venv .venv
-# macOS/Linux
-source .venv/bin/activate
-# Windows PowerShell: .\.venv\Scripts\Activate.ps1
-python -m pip install -r requirements.txt
-```
+\`\`\`
 
-Configure a private session key and your own challenge flag fragments before launching the app.
+Activate the environment (\`source .venv/bin/activate\` on macOS/Linux or \`.\\.venv\\Scripts\\Activate.ps1\` in PowerShell), then install:
+
+\`\`\`sh
+python -m pip install -r requirements.txt
+\`\`\`
+
+Set a session key and your own encrypted flag fragments before launch.
 
 PowerShell:
 
-```powershell
+\`\`\`powershell
 $env:SECRET_KEY = [guid]::NewGuid().ToString()
-$env:ENC_PARTS = '["paste-encoded-part-1","paste-encoded-part-2","paste-encoded-part-3"]'
+$env:ENC_PARTS = '["encoded-part-1","encoded-part-2","encoded-part-3"]'
 python app.py
-```
+\`\`\`
 
 macOS/Linux:
 
-```sh
+\`\`\`sh
 export SECRET_KEY="$(python -c 'import secrets; print(secrets.token_hex(32))')"
-export ENC_PARTS='["paste-encoded-part-1","paste-encoded-part-2","paste-encoded-part-3"]'
+export ENC_PARTS='["encoded-part-1","encoded-part-2","encoded-part-3"]'
 python app.py
-```
+\`\`\`
 
-Open [http://127.0.0.1:5000](http://127.0.0.1:5000). The app binds to localhost by default. The bracelet receipt route remains unavailable until three encoded flag fragments are configured.
+Open [http://127.0.0.1:5000](http://127.0.0.1:5000). The app binds to localhost by default. The \`ACE_SECRET\` header value is generated at runtime unless configured explicitly. The bracelet receipt is disabled until three encrypted fragments are set.
 
-### Create your own flag fragments
+### Generate your own flag fragments
 
-Run `python tools/configure_challenge.py`. It prompts for a flag without echoing it, asks where to split it into three pieces, and prints an `ENC_PARTS` JSON value. Copy that value into your shell environment before starting the app. The private flag is not included in this repository.
+Run \`python tools/configure_challenge.py\`. It prompts for a flag without echoing it, asks for two split positions, and prints the encoded fragments as a JSON array. Copy that JSON into \`ENC_PARTS\` in your shell environment. The original author solution and flag are not included in this repository.
 
 ## Project files
 
-- `app.py` — Flask routes and the intentionally vulnerable storefront.
-- `cipher.py` — reversible Sudoku-derived transposition and URL-safe Base64 wrapper.
-- `tools/configure_challenge.py` — local-only helper to encode a flag you supply.
-- `static/bracelet.png` — tiny image used by the receipt page.
-- `shop.db` — created locally at runtime and ignored by Git.
-
-The original author-only solver and encryption script are omitted from this public repository.
+- \`app.py\` — Flask routes and intentionally vulnerable storefront logic.
+- \`cipher.py\` — reversible Sudoku-derived transposition and URL-safe Base64 wrapper.
+- \`tools/configure_challenge.py\` — local helper that encodes a flag you provide.
+- \`static/bracelet.png\` — image referenced by the receipt route.
+- \`shop.db\` — created at runtime and ignored by Git.
 
 ## Lab safety
 
-The SSTI sink, weak blacklist, trusted client price, and hidden header gate are the exercise itself. Keep the instance offline or inside a disposable, network-isolated environment. The SQLite database records submitted orders. Review [SECURITY.md](SECURITY.md) before running the challenge.
+The SSTI sink, weak blacklist, trusted client price, and hidden header gate are intentional parts of the exercise. Keep the app offline or inside a disposable, network-isolated environment. SQLite stores order details locally. See [SECURITY.md](SECURITY.md) before running the lab.
 
 ## License
 
