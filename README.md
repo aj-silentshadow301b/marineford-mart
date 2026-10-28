@@ -15,7 +15,7 @@ A deliberately vulnerable Flask CTF storefront for an isolated practice lab. The
 python -m venv .venv
 ```
 
-Activate the environment (`source .venv/bin/activate` on macOS/Linux or `.\\.venv\\Scripts\\Activate.ps1` in PowerShell), then install:
+Activate the environment (`source .venv/bin/activate` on macOS/Linux or `.\.venv\Scripts\Activate.ps1` in PowerShell), then install:
 
 ```sh
 python -m pip install -r requirements.txt
